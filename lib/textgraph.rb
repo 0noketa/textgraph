@@ -137,10 +137,16 @@ module TextGraph
     attr_reader :width, :height
 
     def partition(str)
-      str.enum_for(:each_line).map{|line|
-        line.rstrip.enum_for(:each_byte).to_a
-      }
-    end
+      if RUBY_VERSION[0...3].to_f <= 1.8
+        str.enum_for(:each_line).map{|line|
+          line.rstrip.enum_for(:each_byte).to_a
+        }
+      else
+        str.enum_for(:each_line).map{|line|
+          line.rstrip.chars
+        }
+      end
+  end
 
     def [](x,y)
       if (0...@width) === x && (0...@height) === y
